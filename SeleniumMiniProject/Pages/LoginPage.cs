@@ -1,15 +1,10 @@
-﻿using AngleSharp.Dom;
-using NLog;
+﻿using NLog;
 using OpenQA.Selenium;
-using OpenQA.Selenium.BiDi.BrowsingContext;
-using OpenQA.Selenium.Interactions;
 using SeleniumLoginTests.Config;
 using SeleniumLoginTests.Interfaces;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace SeleniumTests.Pages
 {
-
     public class LoginPage : BasePage, ILoginPage
     {
         private static readonly NLog.Logger logger = LogManager.GetCurrentClassLogger();
@@ -18,22 +13,18 @@ namespace SeleniumTests.Pages
             base._driver = driver;
         }
 
-
         private readonly By loginButton = By.CssSelector("button[type='submit']");
-
-        private readonly By flashMessage = By.Id("flash");
 
         private readonly By userNameInput = By.Id("username");
 
         private readonly By passwordInput = By.Id("password");
-
-
 
         public void GoTo()
         {
             logger.Info($"Navigating to the login page: {TestConfig.LoginUrl}");    
             NavigateTo(TestConfig.LoginUrl);        
         }
+
         public new void NavigateTo(string url)
         {
             logger.Info($"Navigating to URL: {url}");
@@ -47,6 +38,7 @@ namespace SeleniumTests.Pages
             Type(passwordInput, password);
             Click(loginButton);
         }
+
         public string GetLoginValidationErrorMessage()
         {
             IWebElement passwordField = _driver.FindElement(By.Id("password")); 

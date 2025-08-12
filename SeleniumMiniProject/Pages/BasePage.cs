@@ -2,13 +2,12 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
-using System;
 
 namespace SeleniumTests.Pages
 {
     public class BasePage
     {
-        private static readonly NLog.Logger logger = LogManager.GetCurrentClassLogger();
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         protected IWebDriver _driver;
         protected WebDriverWait _wait;
 
@@ -140,110 +139,6 @@ namespace SeleniumTests.Pages
                 return (el != null && el.Displayed) ? el : null;
             });
             return element.Text;
-        }
-
-        protected string GetText(By locator, int maxRetries = 20)
-        {
-            int attempts = 0;
-            while (attempts < maxRetries)
-            {
-                try
-                {
-                    var element = _wait.Until(driver =>
-                    {
-                        var el = driver.FindElement(locator);
-                        return (el != null && el.Displayed) ? el : null;
-                    });
-                    return element.Text;
-                }
-                catch (StaleElementReferenceException)
-                {
-                    attempts++;
-                    // Optionally add a small delay before retrying
-                    Thread.Sleep(200);
-                }
-            }
-            throw new StaleElementReferenceException($"Unable to get text after {maxRetries} attempts.");
-        }
-
-        protected bool IsVisible(By locator)
-        {
-            try
-            {
-                var element = _wait.Until(driver =>
-                {
-                    var el = driver.FindElement(locator);
-                    return (el != null && el.Displayed) ? el : null;
-                });
-                return element.Displayed;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        protected void WaitForElementToDisappear(By locator)
-        {
-            _wait.Until(driver =>
-            {
-                try
-                {
-                    var el = driver.FindElement(locator);
-                    return !el.Displayed;
-                }
-                catch (NoSuchElementException)
-                {
-                    return true;
-                }
-            });
-        }
-        protected string GetAlertTextAndDismiss()
-        {
-            IAlert alert = _wait.Until(ExpectedConditions.AlertIsPresent());
-            string? text = alert.Text;
-            alert.Dismiss();
-            return text ?? string.Empty;
-        }
-
-        protected string EnterTextAndAcceptAlert(string input)
-        {
-            IAlert alert = _wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.AlertIsPresent());
-            alert.SendKeys(input);
-            string? text = alert.Text;
-            alert.Accept();
-            return text ?? string.Empty;
-        }
-
-        protected void NavigateTo(string url)
-        {
-            _driver.Navigate().GoToUrl(url);
-        }
-
-        public string GetAlertText()
-        {
-            // Use a fresh find each time to avoid stale references
-            try
-            {
-                // Wait for the alert to be present and visible
-                var alert = _wait.Until(driver =>
-                {
-                    var el = driver.FindElement(By.CssSelector("div.alert"));
-                    return (el != null && el.Displayed) ? el : null;
-                });
-                return alert.Text;
-            }
-            catch (StaleElementReferenceException)
-            {
-                // Try to re-find the element once if it was replaced
-                var alert = _driver.FindElement(By.CssSelector("div.alert"));
-                return alert.Text;
-            }
-            catch (WebDriverTimeoutException)
-            {
-                // If the alert never appears, return empty or throw
-                return string.Empty;
-            }
         }
     }
 }

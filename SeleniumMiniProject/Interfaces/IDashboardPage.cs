@@ -1,6 +1,4 @@
-﻿using System;
-using OpenQA.Selenium;
-using SeleniumTests.Models;
+﻿using SeleniumTests.Models;
 
 
 namespace SeleniumTests.Interfaces

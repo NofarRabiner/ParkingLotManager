@@ -1,5 +1,4 @@
 ﻿using SeleniumTests.Models;
-using System.Collections.Generic;
 
 namespace SeleniumTests.Pages
 {

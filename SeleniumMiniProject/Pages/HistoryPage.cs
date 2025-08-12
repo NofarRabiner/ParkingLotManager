@@ -1,12 +1,6 @@
 ﻿using NLog;
 using OpenQA.Selenium;
 using SeleniumTests.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using OpenQA.Selenium.Support.UI;
 
 namespace SeleniumTests.Pages
 {
@@ -21,12 +15,12 @@ namespace SeleniumTests.Pages
         public List<List<string>> GetHistoryTableData()
         {
             logger.Info("Retrieving history table data");
-            List<List<string>> tableData = new List<List<string>>();
+            var tableData = new List<List<string>>();
             var rows = _driver.FindElements(By.CssSelector("table tbody tr"));
             foreach (var row in rows)
             {
                 var cells = row.FindElements(By.TagName("td"));
-                List<string> rowData = new List<string>();
+                var rowData = new List<string>();
                 foreach (var cell in cells)
                 {
                     rowData.Add(cell.Text);
@@ -37,8 +31,8 @@ namespace SeleniumTests.Pages
         }
         public List<ParkingHistoryRecords> GetParkingHistoryRecords(List<List<string>> historyTableData)
         {
-            List<ParkingHistoryRecords> records = new List<ParkingHistoryRecords>();
-            foreach (var row in historyTableData) // skip headers
+            var records = new List<ParkingHistoryRecords>();
+            foreach (var row in historyTableData) 
             {
                 var record = new ParkingHistoryRecords
                 {
@@ -70,7 +64,7 @@ namespace SeleniumTests.Pages
 
         public bool IsTheVehicleRegisteredInTheHistoryTable(List<ParkingHistoryRecords> historyRecordsData, ParkingHistoryRecords carNewRecord)
         {
-            bool isRegistered = historyRecordsData.Any(record =>
+            var isRegistered = historyRecordsData.Any(record =>
                   record.CarPlate.Trim() == carNewRecord.CarPlate.Trim() &&
                   record.Slot.Trim() == carNewRecord.Slot.Trim());
             return isRegistered;
